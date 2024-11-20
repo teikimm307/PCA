@@ -1,6 +1,8 @@
 import numpy as np
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
+import csv
+import time
 
 def pca(matrix):
     matrix = np.array(matrix)
@@ -51,10 +53,20 @@ def pca(matrix):
     plt.axhline(y=0, color='red', label='axhline - full height')
     plt.show()
 
-print("Hello! This code can be used for principal component analysis. \n")
-matrix_input = input("Please input a valid matrix, with entries along rows separated by commas and rows separated by spaces (e.x. 1,8 2,3): ")
-rows_input = matrix_input.split()
-matrix = [list(map(float, row.split(','))) for row in rows_input]
-matrix_test = np.array(matrix)
-print(f"This is your matrix: \n {matrix_test} \n")
+def load_data(filename):
+    list = []
+    with open(filename) as file:
+        genes = csv.reader(file, delimiter = ',')
+        next(genes)
+        for row in genes:
+            list.append([float(x) for x in row])
+    return list
+
+print("Hello! This code will perform PCA on a given dataset.")
+time.sleep(2)
+new_list = load_data('genes.csv')
+for row in new_list:
+    print(row)
+matrix_test = np.array(new_list)
+print(f"This is your matrix: \n{matrix_test}\n")
 pca(matrix_test)
