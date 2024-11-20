@@ -43,10 +43,12 @@ def pca(matrix):
            value += centered[i,j]*eigenvectors[j,pc2_index]
         ylist.append(value)
 
-    plt.scatter(xlist, ylist, color='red', label='Points')
+    plt.scatter(xlist, ylist, color='blue', label='Points')
     plt.xlabel('PCA 1')
     plt.ylabel('PCA 2')
     plt.title('PCA Plot')
+    plt.axvline(x=0, color='black', label='axvline - full height')
+    plt.axhline(y=0, color='red', label='axhline - full height')
     plt.show()
 
 print("Hello! This code can be used for principal component analysis. \n")
