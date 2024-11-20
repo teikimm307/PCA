@@ -62,7 +62,7 @@ def load_data(filename):
             list.append([float(x) for x in row])
     return list
 
-print("Hello! This code will perform PCA on a given dataset.")
+print("Hello! This code for UM51A will perform PCA on a given dataset.")
 time.sleep(2)
 new_list = load_data('genes.csv')
 for row in new_list:
