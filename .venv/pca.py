@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import csv
 import time
 
-def pca(matrix):
+def pca(matrix,labels,unique_types,name):
     matrix = np.array(matrix)
     centered = matrix - np.mean(matrix, axis = 0, keepdims=True)
     print(f"This is the centered matrix: \n {centered} \n")
@@ -45,28 +45,44 @@ def pca(matrix):
            value += centered[i,j]*eigenvectors[j,pc2_index]
         ylist.append(value)
 
-    plt.scatter(xlist, ylist, color='blue', label='Points')
-    plt.xlabel('PCA 1')
-    plt.ylabel('PCA 2')
-    plt.title('PCA Plot')
-    plt.axvline(x=0, color='black', label='axvline - full height')
-    plt.axhline(y=0, color='red', label='axhline - full height')
+    unique_types = unique_types.tolist()
+    colors = ['green', 'blue', 'red', 'purple', 'brown', 'orange', 'pink', 'cyan', 'magenta']
+    while len(colors) < len(unique_types) + 1:
+        colors.append(np.random.choice(['yellow', 'teal', 'navy', 'lime']))
+
+    added_labels = set()
+    for i in range(len(labels)):
+        index = unique_types.index(labels[i])
+        if labels[i] not in added_labels:
+            plt.scatter(xlist[i], ylist[i], color=colors[index], label = unique_types[index])
+            added_labels.add(labels[i])
+        else:
+            plt.scatter(xlist[i], ylist[i], color=colors[index])
+    plt.xlabel(f"PC1 ({max1_percent}%)")
+    plt.ylabel(f"PC2 ({max2_percent}%)")
+    plt.title(name)
+    plt.axvline(x=0, color='black')
+    plt.axhline(y=0, color='red')
+    plt.legend()
     plt.show()
 
 def load_data(filename):
+    labels = []
     list = []
     with open(filename) as file:
         genes = csv.reader(file, delimiter = ',')
         next(genes)
         for row in genes:
-            list.append([float(x) for x in row])
-    return list
+            labels.append(row[0])
+            list.append([float(x) for x in row[1:]])
+    return labels,list
 
-print("Hello! This code for UM51A will perform PCA on a given dataset.")
+print("Hello! This code for UM51A will perform PCA on a given dataset. \n")
+title = input("Please input the title of your plot: ")
 time.sleep(2)
-new_list = load_data('genes.csv')
-for row in new_list:
-    print(row)
+labels, new_list = load_data('genes.csv')
 matrix_test = np.array(new_list)
+cell_types = matrix_test[:,0]
+unique_cell_types = np.unique(labels)
 print(f"This is your matrix: \n{matrix_test}\n")
-pca(matrix_test)
+pca(matrix_test,labels,unique_cell_types,title)
