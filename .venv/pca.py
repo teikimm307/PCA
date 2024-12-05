@@ -4,11 +4,17 @@ import matplotlib.pyplot as plt
 import csv
 import time
 
-def pca(matrix,labels,unique_types,name):
+def pca(matrix,labels,unique_types,name,standardized_yes_no):
     matrix = np.array(matrix)
     centered = matrix - np.mean(matrix, axis = 0, keepdims=True)
     print(f"This is the centered matrix: \n {centered} \n")
-    covariance = np.cov(centered, rowvar = False)
+    if standardized_yes_no == "y":
+        std_dev = np.std(matrix,axis=0,ddof=1)
+        standardized = centered/std_dev
+        print(f"This is the standardized matrix: \n {standardized} \n")
+        covariance = np.cov(standardized, rowvar = False)
+    else:
+        covariance = np.cov(centered, rowvar=False)
     print(f"This is the covariance matrix: \n {covariance} \n")
     eigenvalues, eigenvectors = LA.eig(covariance)
     print(f"This is the set of eigenvalues: \n {np.round(eigenvalues,2)} \n")
@@ -47,8 +53,7 @@ def pca(matrix,labels,unique_types,name):
 
     unique_types = unique_types.tolist()
     colors = ['green', 'blue', 'red', 'purple', 'brown', 'orange', 'pink', 'cyan', 'magenta']
-    while len(colors) < len(unique_types) + 1:
-        colors.append(np.random.choice(['yellow', 'teal', 'navy', 'lime']))
+    colors.append(np.random.choice(['yellow', 'teal', 'navy', 'lime']))
 
     added_labels = set()
     for i in range(len(labels)):
@@ -79,10 +84,11 @@ def load_data(filename):
 
 print("Hello! This code for UM51A will perform PCA on a given dataset. \n")
 title = input("Please input the title of your plot: ")
+yes_no = input("Would you like your data to be standardized (y/n): ")
 time.sleep(2)
-labels, new_list = load_data('genes.csv')
+labels, new_list = load_data('genes1.csv')
 matrix_test = np.array(new_list)
 cell_types = matrix_test[:,0]
 unique_cell_types = np.unique(labels)
 print(f"This is your matrix: \n{matrix_test}\n")
-pca(matrix_test,labels,unique_cell_types,title)
+pca(matrix_test,labels,unique_cell_types,title,yes_no)
