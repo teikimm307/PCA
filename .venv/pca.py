@@ -85,7 +85,7 @@ def load_data(filename):
 print("Hello! This code for UM51A will perform PCA on a given dataset. \n")
 title = input("Please input the title of your plot: ")
 yes_no = input("Would you like your data to be standardized (y/n): ")
-time.sleep(2)
+time.sleep(1)
 labels, new_list = load_data('genes1.csv')
 matrix_test = np.array(new_list)
 cell_types = matrix_test[:,0]
